@@ -6,6 +6,31 @@ class ClubsController < ApplicationController
 
   def show
     @club = Club.find(params[:id])
+
+    if current_user
+      if current_user == @club.user
+        render :show
+      elsif current_user.allowed?
+        render :show
+      else
+        redirect_to root_path
+      end
+    else
+      redirect_to new_session_path
+    end
+
+    # unless current_user && current_user.allowed?
+    #   redirect_to root_path
+    # end
+    #
+    # @club = Club.find(params[:id])
+
+    # if current_user
+    #   @club = Club.find(params[:id])
+    #   render :show
+    # else
+    #   redirect_to new_session_path
+    # end
   end
 
   def new
